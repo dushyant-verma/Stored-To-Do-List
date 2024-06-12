@@ -1,0 +1,52 @@
+<script>
+
+
+const todoInput = document.getElementById('todo-input');
+const todoList = document.getElementById('todo-list');
+const addButton = document.getElementById('add-button');
+
+let todos = []; // Array to store tasks
+
+function addTodo() {
+  const newTodo = todoInput.value.trim(); // Get and trim user input
+  if (newTodo.length > 0) {
+    todos.push(newTodo); // Add new task to the array
+    todoInput.value = ""; // Clear input field
+    displayTodos(); // Update list with new task
+  }
+}
+
+function displayTodos() {
+  todoList.innerHTML = ""; // Clear existing list items
+  todos.forEach((todo) => {
+    const listItem = document.createElement('li');
+    listItem.innerText = todo;
+    const deleteButton = document.createElement('button');
+    deleteButton.innerText = "Delete";
+    deleteButton.addEventListener('click', function () {
+      const deleteIndex = todos.indexOf(todo);
+      todos.splice(deleteIndex, 1); // Remove task from array
+      displayTodos(); // Update list after deletion
+    });
+    listItem.appendChild(deleteButton);
+    todoList.appendChild(listItem);
+  });
+}
+
+addButton.addEventListener('click', addTodo);
+
+// Check if any tasks are stored in localStorage on page load
+const storedTodos = localStorage.getItem('todos');
+if (storedTodos) {
+  todos = JSON.parse(storedTodos); // Parse stored JSON data
+  displayTodos();
+}
+
+// Save todos to localStorage on every change
+window.addEventListener('beforeunload', function () {
+  localStorage.setItem('todos', JSON.stringify(todos));
+});
+
+
+
+</script>
